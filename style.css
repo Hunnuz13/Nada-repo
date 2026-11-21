@@ -298,7 +298,7 @@ html, body, button, input, textarea, select {
 }
 
 .stage button.primary::before {
-  content: "♡";
+  content: "";
   font-size: 1.15em;
   line-height: 1;
   color: #713b59;
