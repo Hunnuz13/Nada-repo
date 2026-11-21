@@ -75,6 +75,20 @@ document.querySelectorAll('[data-next]').forEach(button => {
 
 document.getElementById('restart').addEventListener('click', () => showScreen('welcome'));
 
-// Start the first screen with the same letter-by-letter effect.
-const firstScreen = document.querySelector('.screen.active');
-if (firstScreen) typeScreen(firstScreen, ++typingRun);
+// Initialize the welcome page through the same screen transition used by every
+// later page, so its text is also cleared and typed letter by letter on first load.
+function startWelcomeScreen() {
+  const firstScreen = document.getElementById('welcome') || document.querySelector('.screen');
+  if (!firstScreen) return;
+
+  typingRun++;
+  const runId = typingRun;
+  screens.forEach(screen => screen.classList.toggle('active', screen === firstScreen));
+  typeScreen(firstScreen, runId);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startWelcomeScreen, { once: true });
+} else {
+  startWelcomeScreen();
+}
