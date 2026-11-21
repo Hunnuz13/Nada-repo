@@ -225,3 +225,42 @@ html, body, button, input, textarea, select {
 @media (max-width: 520px) {
   :root { --unified-text-size: 17px; }
 }
+
+
+/* Final typography pass: all visible text uses one heading-sized scale. */
+:root {
+  --uniform-type-size: 24px;
+  --uniform-type-color: #e7deeb;
+}
+.stage, .stage *,
+.stage button, .stage small, .stage label,
+.stage header, .stage footer, .stage p,
+.stage h1, .stage h2, .stage article,
+.stage article p, .stage .signoff, .stage .restart {
+  font-family: "Cairo", system-ui, sans-serif !important;
+  font-size: var(--uniform-type-size) !important;
+  color: var(--uniform-type-color);
+  line-height: 2;
+}
+.stage h1, .stage h2 {
+  font-weight: 700 !important;
+}
+.stage .symbol {
+  font-size: 48px !important;
+  color: var(--pink) !important;
+}
+.stage em {
+  font-size: inherit !important;
+  color: var(--pink) !important;
+}
+.stage button.primary {
+  color: #211321 !important;
+  font-weight: 700 !important;
+}
+.stage .signoff, .stage label, .stage header, .stage footer, .stage small,
+.stage .restart {
+  font-weight: 500 !important;
+}
+@media (max-width: 520px) {
+  :root { --uniform-type-size: 21px; }
+}
