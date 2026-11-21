@@ -6,11 +6,13 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 function collectTextNodes(root) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
-      return node.nodeValue.trim()
-        ? NodeFilter.FILTER_ACCEPT
-        : NodeFilter.FILTER_REJECT;
+      // Do not type button labels. Buttons appear only after all other text.
+      if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      if (node.parentElement?.closest('button')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
     }
   });
+
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
   return nodes;
@@ -18,14 +20,14 @@ function collectTextNodes(root) {
 
 async function typeScreen(screen, runId) {
   const buttons = [...screen.querySelectorAll('button')];
+
+  // Hide and disable buttons until all non-button text is complete.
   buttons.forEach(button => {
     button.disabled = true;
     button.classList.remove('is-ready');
   });
 
-  // Keep the original text, then reveal it character by character.
-  const textNodes = collectTextNodes(screen);
-  const entries = textNodes.map(node => ({
+  const entries = collectTextNodes(screen).map(node => ({
     node,
     fullText: node.nodeValue,
     parent: node.parentElement
@@ -42,7 +44,6 @@ async function typeScreen(screen, runId) {
     for (const character of fullText) {
       if (runId !== typingRun) return;
       node.nodeValue += character;
-      // Slightly quicker for spaces, natural for Arabic and mobile screens.
       await sleep(character.trim() ? 125 : 75);
     }
 
@@ -50,19 +51,23 @@ async function typeScreen(screen, runId) {
     await sleep(500);
   }
 
-  if (runId === typingRun) {
-    // Reveal the button only after all text on this screen is fully typed.
-    buttons.forEach(button => {
-      button.disabled = false;
-      button.classList.add('is-ready');
-    });
-  }
+  if (runId !== typingRun) return;
+
+  // Show the button only after every heading, paragraph, and label is typed.
+  buttons.forEach(button => {
+    button.disabled = false;
+    button.classList.add('is-ready');
+  });
 }
 
 function showScreen(id) {
   typingRun++;
   const runId = typingRun;
-  screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
+
+  screens.forEach(screen => {
+    screen.classList.toggle('active', screen.id === id);
+  });
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const screen = document.getElementById(id);
@@ -73,18 +78,20 @@ document.querySelectorAll('[data-next]').forEach(button => {
   button.addEventListener('click', () => showScreen(button.dataset.next));
 });
 
-document.getElementById('restart').addEventListener('click', () => showScreen('welcome'));
+const restartButton = document.getElementById('restart');
+if (restartButton) {
+  restartButton.addEventListener('click', () => showScreen('welcome'));
+}
 
-// Initialize the welcome page through the same screen transition used by every
-// later page, so its text is also cleared and typed letter by letter on first load.
+// Run the welcome page through exactly the same animation as every next page.
 function startWelcomeScreen() {
-  const firstScreen = document.getElementById('welcome') || document.querySelector('.screen');
-  if (!firstScreen) return;
+  const welcome = document.getElementById('welcome') || screens[0];
+  if (!welcome) return;
 
   typingRun++;
   const runId = typingRun;
-  screens.forEach(screen => screen.classList.toggle('active', screen === firstScreen));
-  typeScreen(firstScreen, runId);
+  screens.forEach(screen => screen.classList.toggle('active', screen === welcome));
+  typeScreen(welcome, runId);
 }
 
 if (document.readyState === 'loading') {
