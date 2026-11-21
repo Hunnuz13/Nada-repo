@@ -370,3 +370,26 @@ html, body, button, input, textarea, select {
     transition: none !important;
   }
 }
+
+
+/* Keep navigation buttons hidden until every text element has finished typing */
+.stage .primary,
+.stage .restart {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px) scale(.98);
+  transition:
+    opacity .45s ease,
+    transform .45s ease,
+    visibility .45s ease,
+    box-shadow .28s ease,
+    filter .28s ease;
+}
+.stage .primary.is-ready,
+.stage .restart.is-ready {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
