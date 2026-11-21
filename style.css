@@ -402,3 +402,22 @@ html, body, button, input, textarea, select {
 #welcome .typewriter-cursor::after {
   animation: caretBlink .8s steps(1) infinite;
 }
+
+
+/* Reliable button reveal after the welcome-page textwriter completes */
+.stage .primary,
+.stage .restart {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+.stage .primary.is-ready,
+.stage .restart.is-ready {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1);
+}
+.stage button:disabled {
+  cursor: wait;
+}
