@@ -393,3 +393,12 @@ html, body, button, input, textarea, select {
   pointer-events: auto;
   transform: translateY(0) scale(1);
 }
+
+
+/* Explicit first-load state: the welcome page uses the same typewriter flow. */
+#welcome.active {
+  animation: appear .6s ease both;
+}
+#welcome .typewriter-cursor::after {
+  animation: caretBlink .8s steps(1) infinite;
+}
