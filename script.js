@@ -18,7 +18,10 @@ function collectTextNodes(root) {
 
 async function typeScreen(screen, runId) {
   const buttons = [...screen.querySelectorAll('button')];
-  buttons.forEach(button => button.disabled = true);
+  buttons.forEach(button => {
+    button.disabled = true;
+    button.classList.remove('is-ready');
+  });
 
   // Keep the original text, then reveal it character by character.
   const textNodes = collectTextNodes(screen);
@@ -47,7 +50,13 @@ async function typeScreen(screen, runId) {
     await sleep(500);
   }
 
-  if (runId === typingRun) buttons.forEach(button => button.disabled = false);
+  if (runId === typingRun) {
+    // Reveal the button only after all text on this screen is fully typed.
+    buttons.forEach(button => {
+      button.disabled = false;
+      button.classList.add('is-ready');
+    });
+  }
 }
 
 function showScreen(id) {
