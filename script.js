@@ -40,11 +40,11 @@ async function typeScreen(screen, runId) {
       if (runId !== typingRun) return;
       node.nodeValue += character;
       // Slightly quicker for spaces, natural for Arabic and mobile screens.
-      await sleep(character.trim() ? 85 : 48);
+      await sleep(character.trim() ? 125 : 75);
     }
 
     if (parent) parent.classList.remove('typewriter-cursor');
-    await sleep(320);
+    await sleep(500);
   }
 
   if (runId === typingRun) buttons.forEach(button => button.disabled = false);
