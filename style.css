@@ -99,3 +99,58 @@ footer{text-align:center;color:#766e83;font-size:11px;padding:0 0 22px}footer b{
     transition-duration: .01ms !important;
   }
 }
+
+
+/* Unified, readable typography */
+:root { --text-size: 18px; }
+html, body, button {
+  font-family: "Cairo", system-ui, sans-serif;
+}
+.stage, .stage *:not(.symbol) {
+  font-size: var(--text-size);
+}
+h1, h2, p, small, label, header, footer, article, .signoff,
+.primary, .restart {
+  font-size: var(--text-size) !important;
+}
+h1, h2 { line-height: 1.9; font-weight: 700; }
+p, article, article p { line-height: 2.1; }
+small, label, header, footer, .signoff, .restart {
+  font-weight: 500;
+}
+.primary { font-weight: 700; }
+.symbol { font-size: 48px !important; }
+
+@media (max-width: 520px) {
+  :root { --text-size: 17px; }
+}
+
+/* Typewriter effect is handled by script.js */
+.typewriter-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-inline-start: 3px;
+  vertical-align: -0.12em;
+  background: var(--pink);
+  animation: caretBlink .8s steps(1) infinite;
+}
+@keyframes caretBlink {
+  50% { opacity: 0; }
+}
+
+/* Avoid competing entrance animations while text is being typed */
+.screen.active small,
+.screen.active h1,
+.screen.active h2,
+.screen.active p,
+.screen.active label,
+.screen.active .signoff,
+.screen.active .primary,
+.screen.active .restart {
+  animation: none !important;
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
